@@ -38,6 +38,11 @@
                 console.log(currentText[0]);
                 document.getElementById("currentStateDsp").innerHTML = currentText;
 
+                // Current humidity
+                var currentHum = [dataset.current.humidity];
+                var restHum = 100 - currentHum;
+                console.log(restHum);
+
                 // Current city
                 var currentCity = [dataset.location.name];
                 console.log(currentCity);
@@ -68,7 +73,7 @@
 				var temp3days = [dataset.forecast.forecastday[0].day.maxtemp_c, dataset.forecast.forecastday[1].day.maxtemp_c, dataset.forecast.forecastday[2].day.maxtemp_c];
 				console.log(temp3days);
                 
-				// createChart();
+				humidityChart();
                 backgroundCanvas();
                 
 
@@ -78,9 +83,6 @@
                     var canvas = document.getElementById("backgroundCanvas"); // Link canvas to the script
                     var ctx = canvas.getContext("2d"); // Define the context
                     var m = Math.PI;
-                    
-                    // Create variables for each colour used for easier code and debugging
-                    
                     
                     // Fill canvas
                     ctx.fillStyle = background;
@@ -187,8 +189,34 @@
                         }
                     }
 
-                
+                    async function humidityChart(){
 
+                        var ctx = document.getElementById('humidityChart').getContext('2d');
+                        var myChart = new Chart(ctx,
+                        {
+                            type: 'doughnut',
+                            data:
+                            {
+                                datasets: [
+                                {
+                                    label: '',
+                                    data: [currentHum, restHum],
+                                    fill: true,
+                                    backgroundColor: ['#5c9ce5','#EEE'],
+                                    borderColor: [
+                                        '#5c9ce5',
+                                        '#5c9ce5'
+                                    ],
+                                    weight: 1,
+                                    borderWidth: 1
+                                }]
+                            },
+                            options:
+                            
+                            {
+                            }
+                        });
+                    }
                 });
 
 

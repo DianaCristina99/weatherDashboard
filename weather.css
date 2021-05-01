@@ -35,7 +35,7 @@ h2 {
 .dashboard {
   width: 960px;
   height: 700px;
-  background-color: rgba(228, 241, 255, 0.8);
+  background-color: rgba(255, 255, 255, 0.8);
   border-radius: 55px;
   left: 640px;
   position: absolute;
@@ -67,6 +67,11 @@ h2 {
 #currentCityDsp,
 #currentCountryDsp {
   font-size: 16px;
+}
+
+#humidityChart {
+  max-width: 100px;
+  max-height: 100px;
 }
 
 svg {
