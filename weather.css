@@ -1,0 +1,95 @@
+@import url("https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@100;200;300;400&family=PT+Sans+Narrow&display=swap");
+
+body {
+  background-color: #222;
+  color: #eee;
+  margin: 0;
+  padding: 0;
+  font-family: "PT Sans Narrow", sans-serif;
+}
+
+h1 {
+  text-align: center;
+  padding: 20px;
+}
+
+h2 {
+  font-size: 100px;
+  margin: 0;
+  margin-top: 45px;
+}
+
+.container {
+  width: 1900px;
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
+  right: 0;
+  text-align: center;
+}
+
+#backgroundCanvas {
+  border-radius: 55px;
+}
+
+.dashboard {
+  width: 960px;
+  height: 700px;
+  background-color: rgba(228, 241, 255, 0.8);
+  border-radius: 55px;
+  left: 640px;
+  position: absolute;
+  z-index: 2;
+  right: 0;
+  top: 83px;
+  text-align: center;
+}
+
+.currentOverview {
+  position: fixed;
+  max-width: 300px;
+  right: 0;
+  left: 330px;
+  top: 120px;
+  z-index: 1;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.currentLocationDetails {
+  text-align: left;
+  padding: 20px;
+  padding-top: 0;
+}
+
+.dateTime {
+  display: flex;
+  justify-content: space-between;
+  padding-right: 42px;
+  font-family: "Josefin Sans", sans-serif;
+  font-weight: 300;
+  letter-spacing: 0.6px;
+}
+
+#currentTempDsp {
+  font-family: "Josefin Sans", sans-serif;
+  font-weight: 400;
+}
+
+.state {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+  margin-top: -10px;
+  margin-left: -50px;
+}
+
+#iconDsp {
+  width: 40px;
+  height: 40px;
+  /* filter: brightness(160%) contrast(1) grayscale(5); */
+}
