@@ -41,7 +41,12 @@
                 // Current humidity
                 var currentHum = [dataset.current.humidity];
                 var restHum = 100 - currentHum;
-                console.log(restHum);
+                document.getElementById("humDsp").innerHTML = currentHum + "%";
+
+                // Today's chance of rain
+                var chanceRain = [dataset.forecast.forecastday[0].day.daily_chance_of_rain]; 
+                var restRain = 100 - chanceRain;
+                document.getElementById("chanceRainDsp").innerHTML = chanceRain + "%";
 
                 // Current city
                 var currentCity = [dataset.location.name];
@@ -66,15 +71,17 @@
 				console.log(hourTemp);
 
 				// Next 24 hour date and time []
-				let hourDateTime = dataset.forecast.forecastday[0].hour.map(dataset => dataset.time.toString().slice(9, 16));
+				let hourDateTime = dataset.forecast.forecastday[0].hour.map(dataset => dataset.time.toString().slice(11, 16));
 				console.log(hourDateTime);
 
                 // Max temps for the next 3 days
 				var temp3days = [dataset.forecast.forecastday[0].day.maxtemp_c, dataset.forecast.forecastday[1].day.maxtemp_c, dataset.forecast.forecastday[2].day.maxtemp_c];
 				console.log(temp3days);
                 
+                chanceRainChart()
 				humidityChart();
                 backgroundCanvas();
+                createChart();
                 
 
 
@@ -85,6 +92,7 @@
                     var m = Math.PI;
                     
                     // Fill canvas
+                    // ctx.filter = 'brightness(160%) contrast(1) grayscale(5)';
                     ctx.fillStyle = background;
                     ctx.fillRect(0, 0, 1280, 700);
 
@@ -98,7 +106,6 @@
                     var img = new Image();
                     img.src = "http://" + currentIcon;
                     img.onload = function() {
-                    ctx.filter = 'brightness(160%) contrast(1) grayscale(5)';
                     ctx.drawImage(img, 100, 155, 40, 40);
                     }; */
 
@@ -217,51 +224,80 @@
                             }
                         });
                     }
+
+                    async function chanceRainChart(){
+
+                        var ctx = document.getElementById('chanceRainChart').getContext('2d');
+                        var myChart = new Chart(ctx,
+                        {
+                            type: 'doughnut',
+                            data:
+                            {
+                                datasets: [
+                                {
+                                    label: '',
+                                    data: [chanceRain, restRain],
+                                    fill: true,
+                                    backgroundColor: ['#5c9ce5','#EEE'],
+                                    borderColor: [
+                                        '#5c9ce5',
+                                        '#5c9ce5'
+                                    ],
+                                    weight: 1,
+                                    borderWidth: 1
+                                }]
+                            },
+                            options:
+                            
+                            {
+                            }
+                        });
+                    }
+                    async function createChart(){
+
+                        var ctx = document.getElementById('myChart').getContext('2d');
+                        var myChart = new Chart(ctx,
+                        {
+                            type: 'line',
+                            data:
+                            {
+                                labels: hourDateTime,
+                                datasets: [
+                                {
+                                    label: '# of Votes',
+                                    data: hourTemp,
+                                    fill: true,
+                                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                                    borderColor: [
+                                        'rgba(255, 99, 132, 1)'
+                                    ],
+                                    borderWidth: 1
+                                }]
+                            },
+                            options:
+                            {
+                                scales:
+                                {
+                                    y:
+                                    {
+                                        max: 50,
+                                        ticks:
+                                        {
+                                            // Include a dollar sign in the ticks
+                                            callback: function (value, index, values)
+                                            {
+                                                return value + '°C';
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                    }
                 });
 
 
 
-				/*
-				async function createChart(){
-
-					var ctx = document.getElementById('myChart').getContext('2d');
-					var myChart = new Chart(ctx,
-					{
-						type: 'line',
-						data:
-						{
-							labels: hourDateTime,
-							datasets: [
-							{
-								label: '# of Votes',
-								data: hourTemp,
-								fill: true,
-								backgroundColor: 'rgba(255, 99, 132, 0.2)',
-								borderColor: [
-									'rgba(255, 99, 132, 1)'
-								],
-								borderWidth: 1
-							}]
-						},
-						options:
-						{
-							scales:
-							{
-								y:
-								{
-									max: 50,
-									ticks:
-									{
-										// Include a dollar sign in the ticks
-										callback: function (value, index, values)
-										{
-											return value + '°C';
-										}
-									}
-								}
-							}
-						}
-					});
-				}
-			})
-            */
+				
+	
+        

@@ -30,8 +30,20 @@
 		<h1></h1>
 		<div class="backgroundCanvas">
 			<canvas id="backgroundCanvas" width="1280px" height="700px"></canvas>
+			
 			<div class="dashboard">
-				<canvas id="humidityChart"></canvas>
+				<div class="smallCharts">
+					<div class="humidityContainer">
+						<h3 id="humDsp"></h3>
+						<canvas id="humidityChart"></canvas>
+					</div>
+					<div class="chanceRainContainer">
+						<h3 id="chanceRainDsp"></h3>
+						<canvas id="chanceRainChart"></canvas>
+					</div>
+					<canvas id="myChart" width="1280px" height="700px"></canvas>
+					
+				</div>
 			</div>
 		</div>
 	</div>

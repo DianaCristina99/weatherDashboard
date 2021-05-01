@@ -32,19 +32,6 @@ h2 {
   border-radius: 55px;
 }
 
-.dashboard {
-  width: 960px;
-  height: 700px;
-  background-color: rgba(255, 255, 255, 0.8);
-  border-radius: 55px;
-  left: 640px;
-  position: absolute;
-  z-index: 2;
-  right: 0;
-  top: 83px;
-  text-align: center;
-}
-
 .currentOverview {
   position: fixed;
   max-width: 300px;
@@ -67,11 +54,6 @@ h2 {
 #currentCityDsp,
 #currentCountryDsp {
   font-size: 16px;
-}
-
-#humidityChart {
-  max-width: 100px;
-  max-height: 100px;
 }
 
 svg {
@@ -106,4 +88,33 @@ svg {
   width: 40px;
   height: 40px;
   /* filter: brightness(160%) contrast(1) grayscale(5); */
+}
+
+.dashboard {
+  width: 960px;
+  height: 700px;
+  background-color: rgba(255, 255, 255, 0.8);
+  color: #333;
+  border-radius: 55px;
+  left: 640px;
+  position: absolute;
+  z-index: 2;
+  right: 0;
+  top: 83px;
+  text-align: center;
+}
+
+.smallCharts {
+  display: flex;
+  flex-direction: row;
+}
+
+.smallCharts > div {
+  padding: 20px;
+}
+
+#humidityChart,
+#chanceRainChart {
+  max-width: 100px;
+  max-height: 100px;
 }
