@@ -1,9 +1,9 @@
 
-        var api_key = "c7eedc2fa8594d69aa6122025212904";
+        window.onload=function(){
+        const api_key = "c7eedc2fa8594d69aa6122025212904";
 		var city = "Preston";
-
-		var api_url = "http://api.weatherapi.com/v1/forecast.json?key=" + api_key + "&q=" + city + "&days=3&aqi=no&alerts=no";
-		var btn = document.getElementById("btn");
+        var inputCity = document.getElementById("inputCity");
+        const getCity = document.querySelector("form");
         // *** Canvas colours ***
         var backgroundBlue = "#12242f";
         var shader = "#6a6a6a";
@@ -13,9 +13,23 @@
         var white  = "#eee";
         var background = "#5c9ce5";
         // **********************
-		"use strict";
+        
+        getCity.addEventListener("submit", e =>{
+            e.preventDefault();
+            var inputVal = inputCity.value;
+            var api_url = "http://api.weatherapi.com/v1/forecast.json?key=" + api_key + "&q=" + inputVal + "&days=3&aqi=no&alerts=no";
+
+            // Hide overlay after submit
+            document.getElementById("getCity").classList.add("after");
+            document.getElementById("inputCity").classList.add("inpAfter");
+            document.getElementById("submitCity").classList.add("sbmAfter");
+            document.getElementById("getCity").classList.remove("search");
+            document.getElementById("overlay").style.display = "none";
+            document.getElementById("labelCity").style.display = "none";
+              
+
 		fetch(api_url)
-			.then(function (resp)
+			.then(function getData(resp)
 			{
 				return resp.json();
 			})
@@ -77,11 +91,18 @@
                 // Max temps for the next 3 days
 				var temp3days = [dataset.forecast.forecastday[0].day.maxtemp_c, dataset.forecast.forecastday[1].day.maxtemp_c, dataset.forecast.forecastday[2].day.maxtemp_c];
 				console.log(temp3days);
-                
                 chanceRainChart()
 				humidityChart();
                 backgroundCanvas();
-                createChart();
+                // createChart();
+
+                function displayWeather(event){
+                    event.preventDefault();
+                    if(searchCity.val().trim()!==""){
+                        city=searchCity.val().trim();
+                        currentWeather(city);
+                    }
+                }
                 
 
 
@@ -252,52 +273,57 @@
                             {
                             }
                         });
-                    }
-                    async function createChart(){
 
-                        var ctx = document.getElementById('myChart').getContext('2d');
-                        var myChart = new Chart(ctx,
-                        {
-                            type: 'line',
-                            data:
-                            {
-                                labels: hourDateTime,
-                                datasets: [
-                                {
-                                    label: '# of Votes',
-                                    data: hourTemp,
-                                    fill: true,
-                                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                                    borderColor: [
-                                        'rgba(255, 99, 132, 1)'
-                                    ],
-                                    borderWidth: 1
-                                }]
-                            },
-                            options:
-                            {
-                                scales:
-                                {
-                                    y:
-                                    {
-                                        max: 50,
-                                        ticks:
-                                        {
-                                            // Include a dollar sign in the ticks
-                                            callback: function (value, index, values)
-                                            {
-                                                return value + '°C';
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        });
+                        
                     }
+
+});
+                    // async function createChart(){
+
+                    //     var ctx = document.getElementById('myChart').getContext('2d');
+                    //     var myChart = new Chart(ctx,
+                    //     {
+                    //         type: 'line',
+                    //         data:
+                    //         {
+                    //             labels: hourDateTime,
+                    //             datasets: [
+                    //             {
+                    //                 label: '# of Votes',
+                    //                 data: hourTemp,
+                    //                 fill: true,
+                    //                 backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    //                 borderColor: [
+                    //                     'rgba(255, 99, 132, 1)'
+                    //                 ],
+                    //                 borderWidth: 1
+                    //             }]
+                    //         },
+                    //         options:
+                    //         {
+                    //             scales:
+                    //             {
+                    //                 y:
+                    //                 {
+                    //                     max: 50,
+                    //                     ticks:
+                    //                     {
+                    //                         // Include a dollar sign in the ticks
+                    //                         callback: function (value, index, values)
+                    //                         {
+                    //                             return value + '°C';
+                    //                         }
+                    //                     }
+                    //                 }
+                    //             }
+                    //         }
+                    //     });
+                    // }
+
                 });
 
 
-
+            };
 				
 	
         
