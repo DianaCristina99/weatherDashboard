@@ -47,6 +47,23 @@
                 document.getElementById("labelCity").style.display = "none";
             }
 
+            // Fix bug where Chart.js doesn't want to update chart after a new city search
+            function updateChart() {
+                
+                document.getElementById('chanceRainChart').remove();
+                document.getElementById('humidityChart').remove();
+
+
+                var chanceRainChart = document.createElement("canvas");
+                chanceRainChart.id = "chanceRainChart";
+                document.getElementById("chanceRain").appendChild(chanceRainChart);
+                
+                var humidityChart = document.createElement("canvas");
+                humidityChart.id = "humidityChart";
+                document.getElementById("humidity").appendChild(humidityChart); 
+            }
+            updateChart();
+
         }
         // setInterval(refreshData, 50);
         refreshData();
