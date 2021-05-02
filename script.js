@@ -13,19 +13,26 @@
         var white  = "#eee";
         var background = "#5c9ce5";
         // **********************
-        
+
         getCity.addEventListener("submit", e =>{
             e.preventDefault();
             var inputVal = inputCity.value;
             var api_url = "http://api.weatherapi.com/v1/forecast.json?key=" + api_key + "&q=" + inputVal + "&days=3&aqi=no&alerts=no";
 
-            // Hide overlay after submit
-            document.getElementById("getCity").classList.add("after");
-            document.getElementById("inputCity").classList.add("inpAfter");
-            document.getElementById("submitCity").classList.add("sbmAfter");
-            document.getElementById("getCity").classList.remove("search");
-            document.getElementById("overlay").style.display = "none";
-            document.getElementById("labelCity").style.display = "none";
+            if (inputVal == "") { // If the user doesn't type anything...
+                document.getElementById("inputCity").placeholder = 'Try searching for "London"...';
+                return false;
+            }
+            else {
+                // Hide overlay after submit
+                document.getElementById("getCity").classList.add("after");
+                document.getElementById("inputCity").classList.add("inpAfter");
+                document.getElementById("submitCity").classList.add("sbmAfter");
+                document.getElementById("getCity").classList.remove("search");
+                document.getElementById("overlay").style.display = "none";
+                document.getElementById("labelCity").style.display = "none";
+            }
+
               
 
 		fetch(api_url)
