@@ -14,10 +14,24 @@
         var background = "#5c9ce5";
         // **********************
 
+        
+
         getCity.addEventListener("submit", e =>{
             e.preventDefault();
             var inputVal = inputCity.value;
-            var api_url = "http://api.weatherapi.com/v1/forecast.json?key=" + api_key + "&q=" + inputVal + "&days=3&aqi=no&alerts=no";
+            localStorage.setItem("inputVal", inputVal);
+            var city = localStorage.getItem("inputVal");
+            var api_url = "http://api.weatherapi.com/v1/forecast.json?key=" + api_key + "&q=" + city + "&days=3&aqi=no&alerts=no";
+            localStorage.setItem("api_url", api_url);
+            var storedUrl = localStorage.getItem("api_url");
+            function refreshData() {
+                fetch(storedUrl).then(response =>{
+                    response.json().then(json => {
+                        let dataset = json;
+                        let output = formatResponse(dataset);
+
+                    })
+                })
 
             if (inputVal == "") { // If the user doesn't type anything...
                 document.getElementById("inputCity").placeholder = 'Try searching for "London"...';
@@ -33,16 +47,14 @@
                 document.getElementById("labelCity").style.display = "none";
             }
 
-              
+        }
+        // setInterval(refreshData, 50);
+        refreshData();
+        });
 
-		fetch(api_url)
-			.then(function getData(resp)
-			{
-				return resp.json();
-			})
-			.then(function (dataset)
-			{
-				console.log(dataset);
+            function formatResponse(dataset) {
+
+                console.log(dataset);
 
 				// Current temp
 				var currentTemp = [dataset.current.temp_c];
@@ -98,22 +110,10 @@
                 // Max temps for the next 3 days
 				var temp3days = [dataset.forecast.forecastday[0].day.maxtemp_c, dataset.forecast.forecastday[1].day.maxtemp_c, dataset.forecast.forecastday[2].day.maxtemp_c];
 				console.log(temp3days);
-                chanceRainChart()
-				humidityChart();
-                backgroundCanvas();
+                
                 // createChart();
 
-                function displayWeather(event){
-                    event.preventDefault();
-                    if(searchCity.val().trim()!==""){
-                        city=searchCity.val().trim();
-                        currentWeather(city);
-                    }
-                }
-                
-
-
-                async function backgroundCanvas() {
+                function backgroundCanvas() {
 
                     var canvas = document.getElementById("backgroundCanvas"); // Link canvas to the script
                     var ctx = canvas.getContext("2d"); // Define the context
@@ -224,10 +224,10 @@
                         }
                     }
 
-                    async function humidityChart(){
-
+                    function humidityChart(){
+    
                         var ctx = document.getElementById('humidityChart').getContext('2d');
-                        var myChart = new Chart(ctx,
+                        var humidityChart = new Chart(ctx,
                         {
                             type: 'doughnut',
                             data:
@@ -251,40 +251,47 @@
                             {
                             }
                         });
-                    }
-
-                    async function chanceRainChart(){
 
                         var ctx = document.getElementById('chanceRainChart').getContext('2d');
-                        var myChart = new Chart(ctx,
-                        {
-                            type: 'doughnut',
-                            data:
-                            {
-                                datasets: [
-                                {
-                                    label: '',
-                                    data: [chanceRain, restRain],
-                                    fill: true,
-                                    backgroundColor: ['#5c9ce5','#EEE'],
-                                    borderColor: [
-                                        '#5c9ce5',
-                                        '#5c9ce5'
-                                    ],
-                                    weight: 1,
-                                    borderWidth: 1
-                                }]
-                            },
-                            options:
-                            
-                            {
-                            }
-                        });
 
-                        
+                        var rainChart = new Chart(ctx,
+                            {
+                                type: 'doughnut',
+                                data:
+                                {
+                                    datasets: [
+                                    {
+                                        label: '',
+                                        data: [chanceRain, restRain],
+                                        fill: true,
+                                        backgroundColor: ['#5c9ce5','#EEE'],
+                                        borderColor: [
+                                            '#5c9ce5',
+                                            '#5c9ce5'
+                                        ],
+                                        weight: 1,
+                                        borderWidth: 1
+                                    }]
+                                },
+                                options:
+                                
+                                {
+                                }
+                            });
+
+                            function updateData() {
+                                rainChart.data.datasets[0].data = [chanceRain, restRain];
+                                rainChart.update();
+                            }
                     }
 
-});
+                    humidityChart();
+                backgroundCanvas();
+                    }
+
+
+            }
+				
                     // async function createChart(){
 
                     //     var ctx = document.getElementById('myChart').getContext('2d');
@@ -327,10 +334,7 @@
                     //     });
                     // }
 
-                });
 
-
-            };
 				
 	
         
