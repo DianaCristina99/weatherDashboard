@@ -279,14 +279,10 @@
                                 }
                             });
 
-                            function updateData() {
-                                rainChart.data.datasets[0].data = [chanceRain, restRain];
-                                rainChart.update();
-                            }
                     }
 
                     humidityChart();
-                backgroundCanvas();
+                    backgroundCanvas();
                     }
 
 

@@ -1,5 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@100;200;300;400&&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Ubuntu:wght@300&display=swap");
+
 body {
   background-color: #222;
   color: #eee;
@@ -19,14 +20,7 @@ h2 {
   margin-top: 45px;
 }
 
-.container {
-  width: 1900px;
-  margin-left: auto;
-  margin-right: auto;
-  left: 0;
-  right: 0;
-  text-align: center;
-}
+/* Overlay */
 
 .after {
   position: absolute;
@@ -129,6 +123,17 @@ label {
   text-transform: uppercase;
 }
 
+/* Interface - background */
+
+.container {
+  width: 1900px;
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
+  right: 0;
+  text-align: center;
+}
+
 #backgroundCanvas {
   border-radius: 55px;
 }
@@ -155,10 +160,6 @@ label {
 #currentCityDsp,
 #currentCountryDsp {
   font-size: 16px;
-}
-
-svg {
-  margin-top: 10px;
 }
 
 .dateTime {
@@ -190,6 +191,8 @@ svg {
   height: 40px;
   /* filter: brightness(160%) contrast(1) grayscale(5); */
 }
+
+/* Interface - dashboard */
 
 .dashboard {
   width: 960px;
