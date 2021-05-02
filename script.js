@@ -1,9 +1,9 @@
 
         window.onload=function(){
         const api_key = "c7eedc2fa8594d69aa6122025212904";
-		var city = "Preston";
-        var inputCity = document.getElementById("inputCity");
+        const inputCity = document.getElementById("inputCity");
         const getCity = document.querySelector("form");
+
         // *** Canvas colours ***
         var backgroundBlue = "#12242f";
         var shader = "#6a6a6a";
@@ -17,13 +17,16 @@
         
 
         getCity.addEventListener("submit", e =>{
+            // Prevent the form from submission
             e.preventDefault();
+            // Get city name and store it in local storage
             var inputVal = inputCity.value;
             localStorage.setItem("inputVal", inputVal);
             var city = localStorage.getItem("inputVal");
             var api_url = "http://api.weatherapi.com/v1/forecast.json?key=" + api_key + "&q=" + city + "&days=3&aqi=no&alerts=no";
             localStorage.setItem("api_url", api_url);
             var storedUrl = localStorage.getItem("api_url");
+            // Get the dataset
             function refreshData() {
                 fetch(storedUrl).then(response =>{
                     response.json().then(json => {
@@ -31,11 +34,13 @@
                         let output = formatResponse(dataset);
 
                     })
+                    // Catch error - for example, the user doesn't input a valid city / postcode / country
+                    .catch(error => console.log("not ok")); // TO BE IMPROVED
                 })
 
             if (inputVal == "") { // If the user doesn't type anything...
-                document.getElementById("inputCity").placeholder = 'Try searching for "London"...';
-                return false;
+                document.getElementById("inputCity").placeholder = 'Try searching for "London"...'; // Replace placeholder text with a city suggestion
+                return false; // and don't run
             }
             else {
                 // Hide overlay after submit
@@ -49,7 +54,8 @@
 
             // Fix bug where Chart.js doesn't want to update chart after a new city search
             function updateChart() {
-                
+                // Remove canvases and add them again, along with their unique IDs
+                // This will update the canvases every time the user looks for a new city
                 document.getElementById('chanceRainChart').remove();
                 document.getElementById('humidityChart').remove();
 
@@ -65,10 +71,14 @@
             updateChart();
 
         }
-        // setInterval(refreshData, 50);
-        refreshData();
-        });
 
+            // After the user inputs something...
+            setTimeout(function(){
+                refreshData(); // Display the dashboard immediately
+                setInterval(refreshData, 60000); // And then refresh the dashboard every X milliseconds
+            }, 1);
+        
+        });
             function formatResponse(dataset) {
 
                 console.log(dataset);
@@ -124,13 +134,12 @@
 				let hourDateTime = dataset.forecast.forecastday[0].hour.map(dataset => dataset.time.toString().slice(11, 16));
 				console.log(hourDateTime);
 
-                // Max temps for the next 3 days
+                // Max temps for the next 3 days []
 				var temp3days = [dataset.forecast.forecastday[0].day.maxtemp_c, dataset.forecast.forecastday[1].day.maxtemp_c, dataset.forecast.forecastday[2].day.maxtemp_c];
 				console.log(temp3days);
-                
-                // createChart();
 
-                function backgroundCanvas() {
+                // 
+                function canvases() {
 
                     var canvas = document.getElementById("backgroundCanvas"); // Link canvas to the script
                     var ctx = canvas.getContext("2d"); // Define the context
@@ -299,7 +308,7 @@
                     }
 
                     humidityChart();
-                    backgroundCanvas();
+                    canvases();
                     }
 
 
