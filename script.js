@@ -5,34 +5,21 @@
         const getCity = document.querySelector("form");
 
         // *** Canvas colours ***
-        var backgroundBlue = "#12242f";
-        var shader = "#6a6a6a";
-        var wall = "#b4aca3";
-        var windowsDark = "#898989";
-        var windowsLight = "#d6d6d5";
-        var white  = "#eee";
-        var background = "#5c9ce5";
-        // **********************
-
         
+        // **********************
 
         getCity.addEventListener("submit", e =>{
             // Prevent the form from submission
             e.preventDefault();
             // Get city name and store it in local storage
             var inputVal = inputCity.value;
-            localStorage.setItem("inputVal", inputVal);
-            var city = localStorage.getItem("inputVal");
-            var api_url = "http://api.weatherapi.com/v1/forecast.json?key=" + api_key + "&q=" + city + "&days=3&aqi=no&alerts=no";
-            localStorage.setItem("api_url", api_url);
-            var storedUrl = localStorage.getItem("api_url");
+            var api_url = "http://api.weatherapi.com/v1/forecast.json?key=" + api_key + "&q=" + inputVal + "&days=3&aqi=no&alerts=no";
             // Get the dataset
             function refreshData() {
-                fetch(storedUrl).then(response =>{
+                fetch(api_url).then(response =>{
                     response.json().then(json => {
                         let dataset = json;
                         let output = formatResponse(dataset);
-
                     })
                     // Catch error - for example, the user doesn't input a valid city / postcode / country
                     .catch(error => console.log("not ok")); // TO BE IMPROVED
@@ -70,17 +57,17 @@
             }
             updateChart();
 
-        }
-
-            // After the user inputs something...
-            setTimeout(function(){
+        }   
+                
                 refreshData(); // Display the dashboard immediately
-                setInterval(refreshData, 60000); // And then refresh the dashboard every X milliseconds
-            }, 1);
+                
+                // setInterval(refreshData, 5000); // And then refresh the dashboard every X milliseconds
+            
         
         });
+        
             function formatResponse(dataset) {
-
+                
                 console.log(dataset);
 
 				// Current temp
@@ -121,6 +108,36 @@
                 document.getElementById("currentTimeDsp").innerHTML = localTime;
                 console.log(localDate);
 
+                // Convent local time to number              
+                var localTimeSplit = localTime.split(":");
+                console.log(localTimeSplit);
+                var localTimeHour = localTimeSplit[0];
+                var localTimeInt = parseFloat(localTimeHour);
+                console.log(localTimeInt);
+                
+                // Local sundown
+                var sundown = [dataset.forecast.forecastday[0].astro.sunset.toString()];
+                var sundownSplit = sundown.toString().split(":");
+                console.log(sundownSplit);
+                var sundownHour = sundownSplit[0];
+                var sundownInt = parseFloat(sundownHour);
+
+                // Convert sundown time
+                var sundownMinutes = sundownSplit[1].includes("PM");
+                if (sundownMinutes == true){
+                    var sundownInt = sundownInt + 12;
+                }
+                console.log(sundownInt);
+
+
+                // Local sunrise
+                var sunrise = [dataset.forecast.forecastday[0].astro.sunrise.toString()];
+                var sunriseSplit = sunrise.toString().split(":");
+                console.log(sunriseSplit);
+                var sunriseHour = sunriseSplit[0];
+                var sunriseInt = parseFloat(sunriseHour);
+                console.log(sunriseInt);
+                
                 // Current country
                 var currentCity = [dataset.location.country];
                 console.log(currentCity);
@@ -138,15 +155,75 @@
 				var temp3days = [dataset.forecast.forecastday[0].day.maxtemp_c, dataset.forecast.forecastday[1].day.maxtemp_c, dataset.forecast.forecastday[2].day.maxtemp_c];
 				console.log(temp3days);
 
-                // 
+
+
+                var canvas = document.getElementById("backgroundCanvas"); // Link canvas to the script
+                var ctx = canvas.getContext("2d"); // Define the context
+                var m = Math.PI;
+
+                // Determine whether it's night time or day time and set colour theme 
+                if (localTimeInt > sunriseInt && localTimeInt < sundownInt) {
+                    // It's day time
+                    var shader = "#6a6a6a";
+                    var wall = "#b4aca3";
+                    var windowsDark = "#898989";
+                    var windowsLight = "#d6d6d5";
+                    var white  = "#eee";
+                    var circle = "#ecb150";
+                    var cloud = "transparent";
+                    var rain = "transparent";
+
+                    // Based on the weather state...
+
+                    if(currentText.toString().includes('rain') == true) {
+                        var background = "#9cb6ca";
+                        var circle = "transparent"; // Hide the sun / moon
+                        var cloud = "#EAEAEA";
+                        var rain = "#ddd";
+                    }
+                    else if(currentText.toString().includes('Overcast') || currentText.toString().includes('cloud')) { // If the current state contains "Overcast" or "cloud"...
+                        var background = "#aac7e8";
+                        var circle = "transparent";
+                        var cloud = "#EAEAEA";
+                    }
+                    else {
+                        var background = "#5c9ce5";
+                    }
+
+                }
+                else {
+                    // It's night time
+                    var shader = "#12192e";
+                    var wall = "#65667c";
+                    var windowsDark = "#3c465e";
+                    var windowsLight = "#e7d7ba";
+                    var white  = "#eee";
+                    var background = "#1b2846";
+                    var circle = "#ece2d0";
+                    var cloud = "transparent";
+                    var rain = "transparent";
+
+                    // Based on the weather state...
+
+                    if(currentText.toString().includes('rain') == true) { // If the current state contains "rain"...
+                        var circle = "transparent"; // Hide the sun / moon
+                        var cloud = "#374E81";
+                        var rain = "#ccc";
+                    }
+                    else if(currentText.toString().includes('Overcast') || currentText.toString().includes('cloud')) { // If the current state contains "Overcast" or "cloud"...
+                        var circle = "transparent";
+                        var cloud = "#374E81";
+                    }
+                    else {
+                        var background = "#1b2846";
+                    }
+                }
+
                 function canvases() {
 
-                    var canvas = document.getElementById("backgroundCanvas"); // Link canvas to the script
-                    var ctx = canvas.getContext("2d"); // Define the context
-                    var m = Math.PI;
                     
-                    // Fill canvas
-                    // ctx.filter = 'brightness(160%) contrast(1) grayscale(5)';
+                    
+                    // Fill background canvas
                     ctx.fillStyle = background;
                     ctx.fillRect(0, 0, 1280, 700);
 
@@ -162,8 +239,13 @@
                     img.onload = function() {
                     ctx.drawImage(img, 100, 155, 40, 40);
                     }; */
-
                     
+                    // cloud = new Image();
+                    // cloud.src = 'img/cloud.png';
+                    // cloud.onload = function(){
+                    // ctx.drawImage(cloud, 140, 410, 200, 200);
+                    // }
+
                     function makeRect(x, y, z, a, fill) { // => We will be adding our custom values here later
                         ctx.beginPath(); // Start drawing
                         ctx.rect(x, y, z, a, fill); // Make rectangle with unset values
@@ -179,11 +261,34 @@
                         ctx.fillStyle = fill;
                         ctx.fill();
                     }
+                    makeArc(140, 450, 70, 2 * m, false, circle); // Sun
+
+                    // Cloud
+                    makeArc(120, 460, 30, 0,  2 * m, cloud); 
+                    makeArc(158, 440, 35, 0,  2 * m, cloud); 
+                    makeArc(200, 445, 30, 0,  2 * m, cloud);
+                    makeArc(230, 465, 25, 0,  2 * m, cloud);
+                    makeArc(130, 490, 33, 0,  2 * m, cloud);
+                    makeArc(170, 495, 31, 0,  2 * m, cloud);
+                    makeArc(210, 495, 26, 0,  2 * m, cloud);
+
+                    // Rain drops
+                    ctx.beginPath();
+                    ctx.moveTo(210, 530);
+                    ctx.lineTo(195, 550);
+
+                    ctx.moveTo(190, 530);
+                    ctx.lineTo(175, 550);
+
+                    ctx.moveTo(170, 530);
+                    ctx.lineTo(155, 550);
                     
-                    makeArc(140, 450, 70, 2 * m, false, "#ecb150"); // Sun
-                    
-                    
-                    
+                    ctx.lineWidth = 3;
+                    ctx.strokeStyle = rain;
+                    ctx.stroke();
+
+
+                    // Buildings              
                     makeRect(0, 270, 70, 500, wall); // Block
                     
                     // Second building Left Balconies
@@ -203,18 +308,13 @@
                         yCoordinate  = yCoordinate  + 20;
                         }
                     
-                    makeArc(12, 270, 50, 1 * m, false, 0, windowsLight); // Arch
+                        // Arch traditional way - not enough args
+                        ctx.beginPath(); // Start drawing
+                        ctx.arc(12, 270, 50, 1 * m, false); // Make circle with unset values
+                        ctx.fillStyle = shader;
+                        ctx.fill();
                     
-                    // Fill arch with gradient
-                    
-                    // Ref: https://www.w3schools.com/graphics/canvas_gradients.asp
-                    
-                    var grd = ctx.createLinearGradient(575, 200, 760, 200); // Create gradient with these positions and dimensions
-                    grd.addColorStop(0, shader); // Left colour
-                    grd.addColorStop(1, windowsLight); // Right colour
-                    ctx.fillStyle = grd; // Fill shape with gradient
-                    ctx.fill();
-                    
+                        
                     // LAST BUILDING
                     
                     // First Block
@@ -232,7 +332,7 @@
                     
                     makeRect(70, 450, 60, 650, wall); // Thick Block
                     makeRect(84, 670, 30, 300, shader); // Connecter Block
-                    makeRect(90, 370, 8, 80, shader); // Top Narrow Dark Block 
+                    makeRect(90, 370, 8, 80, windowsDark); // Top Narrow Dark Block 
                     makeRect(100, 370, 8, 80, wall); // Top Narrow Light Block 
                     
                     // Long Windows
@@ -263,11 +363,8 @@
                                     label: '',
                                     data: [currentHum, restHum],
                                     fill: true,
-                                    backgroundColor: ['#5c9ce5','#EEE'],
-                                    borderColor: [
-                                        '#5c9ce5',
-                                        '#5c9ce5'
-                                    ],
+                                    backgroundColor: [background,white],
+                                    borderColor: [background],
                                     weight: 1,
                                     borderWidth: 1
                                 }]
@@ -277,6 +374,7 @@
                             {
                             }
                         });
+                        
 
                         var ctx = document.getElementById('chanceRainChart').getContext('2d');
 
@@ -290,11 +388,8 @@
                                         label: '',
                                         data: [chanceRain, restRain],
                                         fill: true,
-                                        backgroundColor: ['#5c9ce5','#EEE'],
-                                        borderColor: [
-                                            '#5c9ce5',
-                                            '#5c9ce5'
-                                        ],
+                                        backgroundColor: [background,white],
+                                        borderColor: [background],
                                         weight: 1,
                                         borderWidth: 1
                                     }]
@@ -358,5 +453,5 @@
 
 
 				
-	
+                                  
         
