@@ -3,10 +3,7 @@
         const api_key = "c7eedc2fa8594d69aa6122025212904";
         const inputCity = document.getElementById("inputCity");
         const getCity = document.querySelector("form");
-
-        // *** Canvas colours ***
-        
-        // **********************
+        var currentInterval = null;
 
         getCity.addEventListener("submit", e =>{
             // Prevent the form from submission
@@ -18,8 +15,9 @@
             function refreshData() {
                 fetch(api_url).then(response =>{
                     response.json().then(json => {
-                        let dataset = json;
-                        let output = formatResponse(dataset);
+                        var dataset = json;
+                        var output = formatResponse(dataset);
+                        console.log(api_url);
                     })
                     // Catch error - for example, the user doesn't input a valid city / postcode / country
                     .catch(error => console.log("not ok")); // TO BE IMPROVED
@@ -57,13 +55,19 @@
             }
             updateChart();
 
-        }   
-                
-                refreshData(); // Display the dashboard immediately
-                
-                // setInterval(refreshData, 5000); // And then refresh the dashboard every X milliseconds
-            
-        
+        }       if (currentInterval) {
+                    clearInterval(currentInterval);
+                    currentInterval = null;
+                    console.log('Cleared currentInterval');
+                }
+
+                refreshData(); // Display the dashboard immediately 
+
+                // Set new interval after a new input
+                currentInterval = setInterval(function () {
+                refreshData();  
+                }, 5000);
+                  
         });
         
             function formatResponse(dataset) {
