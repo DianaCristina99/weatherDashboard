@@ -208,17 +208,77 @@ label {
   text-align: center;
 }
 
-.smallCharts {
+.charts {
   display: flex;
   flex-direction: row;
+  justify-content: space-around;
+  align-content: center;
+  align-items: center;
+  border-radius: 55px;
+  min-width: 100%;
+  height: 25%;
 }
 
-.smallCharts > div {
-  padding: 20px;
+.charts .chartContainer {
+  padding: 10px;
+  background-color: #fff;
+  width: 25%;
+  border-radius: 45px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  align-content: center;
 }
 
-#humidityChart,
-#chanceRainChart {
-  max-width: 100px;
-  max-height: 100px;
+.charts .containerLarge {
+  width: 92%;
+  height: 50%;
+}
+
+.chartHeading {
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  justify-content: space-around;
+  padding: 5px;
+  align-items: center;
+  align-content: center;
+  color: #545454;
+}
+
+.chartHeading i {
+  font-size: 15px;
+  border-radius: 8px;
+  padding: 5px;
+  width: 16px;
+  height: 15px;
+}
+
+.charts h2 {
+  font-size: 15px;
+  margin: 0;
+}
+
+.charts h3 {
+  margin: 0;
+  font-size: 21px;
+  color: #333;
+  font-weight: bolder;
+  font-family: "Josefin Sans", sans-serif;
+}
+
+.large {
+  height: 50%;
+}
+
+.charts canvas {
+  max-width: 80px;
+  max-height: 80px;
+  padding: 5px;
+}
+
+#hourChart {
+  max-width: 500px;
+  max-height: 500px;
 }

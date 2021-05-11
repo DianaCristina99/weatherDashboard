@@ -66,7 +66,7 @@
                 // Set new interval after a new input
                 currentInterval = setInterval(function () {
                 refreshData();  
-                }, 5000);
+                }, 100000); // Refresh the dashboard every X milliseconds
                   
         });
         
@@ -176,19 +176,26 @@
                     var circle = "#ecb150";
                     var cloud = "transparent";
                     var rain = "transparent";
+                    var snow = "transparent";
 
                     // Based on the weather state...
 
                     if(currentText.toString().includes('rain') == true) {
-                        var background = "#9cb6ca";
+                        var background = "#9cb6ca"; // Change background colour
                         var circle = "transparent"; // Hide the sun / moon
-                        var cloud = "#EAEAEA";
-                        var rain = "#ddd";
+                        var cloud = "#EAEAEA"; // Show the cloud
+                        var rain = "#ddd"; // Show the rain
                     }
                     else if(currentText.toString().includes('Overcast') || currentText.toString().includes('cloud')) { // If the current state contains "Overcast" or "cloud"...
-                        var background = "#aac7e8";
-                        var circle = "transparent";
-                        var cloud = "#EAEAEA";
+                        var background = "#aac7e8"; // Change background colour
+                        var circle = "transparent"; // Hide the sun / moon
+                        var cloud = "#EAEAEA"; // Show the cloud
+                    }
+                    else if(currentText.toString().includes('snow') || currentText.toString().includes('Snow') || currentText.toString().includes('sleet')) { // If the current state contains "Overcast" or "cloud"...
+                        var background = "#9cb6ca"; // Change the background
+                        var circle = "transparent"; // Hide the sun / moon
+                        var cloud = "#EAEAEA"; // Show the cloud
+                        var snow = "#ddd"; // Show the snow
                     }
                     else {
                         var background = "#5c9ce5";
@@ -206,17 +213,23 @@
                     var circle = "#ece2d0";
                     var cloud = "transparent";
                     var rain = "transparent";
+                    var snow = "transparent";
 
                     // Based on the weather state...
 
                     if(currentText.toString().includes('rain') == true) { // If the current state contains "rain"...
                         var circle = "transparent"; // Hide the sun / moon
-                        var cloud = "#374E81";
-                        var rain = "#ccc";
+                        var cloud = "#374E81"; // Show the cloud
+                        var rain = "#ccc"; // Show the rain
                     }
                     else if(currentText.toString().includes('Overcast') || currentText.toString().includes('cloud')) { // If the current state contains "Overcast" or "cloud"...
-                        var circle = "transparent";
-                        var cloud = "#374E81";
+                        var circle = "transparent"; // Hide the sun / moon
+                        var cloud = "#374E81"; // Show the cloud
+                    }
+                    else if(currentText.toString().includes('snow') || currentText.toString().includes('Snow') || currentText.toString().includes('sleet')) { // If the current state contains "Overcast" or "cloud"...
+                        var circle = "transparent"; // Hide the sun
+                        var cloud = "#EAEAEA"; // Show the cloud
+                        var snow = "#ccc"; // Show the snow
                     }
                     else {
                         var background = "#1b2846";
@@ -291,6 +304,14 @@
                     ctx.strokeStyle = rain;
                     ctx.stroke();
 
+                    // Snowflakes
+                    makeArc(170, 540, 4, 0,  2 * m, snow); 
+                    makeArc(180, 560, 4, 0,  2 * m, snow);
+                    makeArc(190, 540, 4, 0,  2 * m, snow);
+                    makeArc(200, 560, 4, 0,  2 * m, snow);  
+                    makeArc(210, 540, 4, 0,  2 * m, snow);  
+
+
 
                     // Buildings              
                     makeRect(0, 270, 70, 500, wall); // Block
@@ -317,8 +338,7 @@
                         ctx.arc(12, 270, 50, 1 * m, false); // Make circle with unset values
                         ctx.fillStyle = shader;
                         ctx.fill();
-                    
-                        
+                                       
                     // LAST BUILDING
                     
                     // First Block
@@ -352,7 +372,15 @@
                         makeRect(180, yCoordinate , 20, 9, windowsDark);
                         yCoordinate  = yCoordinate  + 22;
                         }
+                    
+
+                    // Change the colour of the icons based on the weather state / time of the day
+                    var icons = document.getElementsByClassName('icon');
+                    for (var i = 0; i < icons.length; i++) {
+                        icons[i].style.color = background;
+                        icons[i].style.border = "2px solid" + background;
                     }
+                }
 
                     function humidityChart(){
     
@@ -404,6 +432,46 @@
                                 }
                             });
 
+                            //     var ctx = document.getElementById('hourChart').getContext('2d');
+                            //     var hourChart = new Chart(ctx,
+                            //     {
+                            //         type: 'line',
+                            //         data:
+                            //         {
+                            //             labels: hourDateTime,
+                            //             datasets: [
+                            //             {
+                            //                 label: '# of Votes',
+                            //                 data: hourTemp,
+                            //                 fill: true,
+                            //                 backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                            //                 borderColor: [
+                            //                     'rgba(255, 99, 132, 1)'
+                            //                 ],
+                            //                 borderWidth: 1
+                            //             }]
+                            //         },
+                            //         options:
+                            //         {
+                            //             scales:
+                            //             {
+                            //                 y:
+                            //                 {
+                            //                     max: 50,
+                            //                     ticks:
+                            //                     {
+                            //                         // Include a dollar sign in the ticks
+                            //                         callback: function (value, index, values)
+                            //                         {
+                            //                             return value + '°C';
+                            //                         }
+                            //                     }
+                            //                 }
+                            //             }
+                            //         }
+                            //     });
+                            // }
+
                     }
 
                     humidityChart();
@@ -413,47 +481,7 @@
 
             }
 				
-                    // async function createChart(){
-
-                    //     var ctx = document.getElementById('myChart').getContext('2d');
-                    //     var myChart = new Chart(ctx,
-                    //     {
-                    //         type: 'line',
-                    //         data:
-                    //         {
-                    //             labels: hourDateTime,
-                    //             datasets: [
-                    //             {
-                    //                 label: '# of Votes',
-                    //                 data: hourTemp,
-                    //                 fill: true,
-                    //                 backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                    //                 borderColor: [
-                    //                     'rgba(255, 99, 132, 1)'
-                    //                 ],
-                    //                 borderWidth: 1
-                    //             }]
-                    //         },
-                    //         options:
-                    //         {
-                    //             scales:
-                    //             {
-                    //                 y:
-                    //                 {
-                    //                     max: 50,
-                    //                     ticks:
-                    //                     {
-                    //                         // Include a dollar sign in the ticks
-                    //                         callback: function (value, index, values)
-                    //                         {
-                    //                             return value + '°C';
-                    //                         }
-                    //                     }
-                    //                 }
-                    //             }
-                    //         }
-                    //     });
-                    // }
+                    
 
 
 				

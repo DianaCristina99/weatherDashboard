@@ -40,17 +40,74 @@
 			<canvas id="backgroundCanvas" width="1280px" height="700px"></canvas>
 			
 			<div class="dashboard">
-				<div class="smallCharts">
-					<div class="humidityContainer" id="humidity">
+				<div class="charts large">
+					<div class="chartContainer containerLarge" id="hour">
+						<!-- <canvas id="hourChart"></canvas> -->	
+					</div>
+				</div>
+
+
+				<div class="charts">
+
+					<div class="chartContainer" id="humidity">
+						<div class="chartHeading">
+							<h2>Humidity</h2>
+							<i class="fas fa-tint icon"></i>
+						</div>
+
 						<h3 id="humDsp"></h3>
 						<canvas id="humidityChart"></canvas>
 					</div>
-					<div class="chanceRainContainer" id="chanceRain">
+
+					<div class="chartContainer" id="chanceRain">
+						<div class="chartHeading">
+							<h2>Chance of rain</h2>
+							<i class="fas fa-umbrella icon"></i>
+						</div>
 						<h3 id="chanceRainDsp"></h3>
 						<canvas id="chanceRainChart"></canvas>
 					</div>
-					<!-- <canvas id="myChart" width="1280px" height="700px"></canvas> -->
+
+					<div class="chartContainer" id="wind">
+						<div class="chartHeading">
+							<h2>Wind</h2>
+							<i class="fas fa-wind icon"></i>
+						</div>
+						<h3 id="windDsp"></h3>
+						<canvas id="windChart"></canvas>
+					</div>
 					
+				</div>
+
+
+				<div class="charts">
+					<div class="chartContainer" id="uv">
+						<div class="chartHeading">
+							<h2>UV Index</h2>
+							<i class="fas fa-sun icon"></i>
+						</div>
+
+						<h3 id="uvDsp"></h3>
+						<canvas id="uvChart"></canvas>
+					</div>
+
+					<div class="chartContainer" id="precip">
+						<div class="chartHeading">
+							<h2>Precipitation</h2>
+							<i class="fas fa-cloud-rain icon"></i>
+						</div>
+						<h3 id="precipDsp"></h3>
+						<canvas id="precipChart"></canvas>
+					</div>
+
+					<div class="chartContainer" id="feels">
+						<div class="chartHeading">
+							<h2>Feels Like</h2>
+							<i class="fas fa-thermometer-three-quarters icon"></i>
+						</div>
+						<h3 id="feelsDsp"></h3>
+						<canvas id="feelsChart"></canvas>
+					</div>					
 				</div>
 			</div>
 		</div>
