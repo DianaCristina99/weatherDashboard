@@ -1,23 +1,23 @@
 
         window.onload=function(){
+
         const api_key = "c7eedc2fa8594d69aa6122025212904";
-        const inputCity = document.getElementById("inputCity");
-        const getCity = document.querySelector("form");
+        const inputCity = document.getElementById("inputCity"); // To get user input
+        const getCity = document.querySelector("form"); // For event handling (form submit)
         var currentInterval = null;
 
-        getCity.addEventListener("submit", e =>{
-            // Prevent the form from submission
-            e.preventDefault();
-            // Get city name and store it in local storage
-            var inputVal = inputCity.value;
+        getCity.addEventListener("submit", e =>{ // When the user submits something...
+            e.preventDefault(); // Prevent the form from submission
+            var inputVal = inputCity.value; // Get city name
+            // Api Url - containing the API key and the city inputted by the user
             var api_url = "http://api.weatherapi.com/v1/forecast.json?key=" + api_key + "&q=" + inputVal + "&days=3&aqi=no&alerts=no";
-            // Get the dataset
+            
             function refreshData() {
+                // Get the dataset
                 fetch(api_url).then(response =>{
-                    response.json().then(json => {
-                        var dataset = json;
-                        var output = formatResponse(dataset);
-                        console.log(api_url);
+                    response.json().then(json => { 
+                        var dataset = json; // Store the json data in a variable
+                        formatResponse(dataset); // Use this function to get stuff from the dataset
                     })
                     // Catch error - for example, the user doesn't input a valid city / postcode / country
                     .catch(error => console.log("not ok")); // TO BE IMPROVED
@@ -55,11 +55,12 @@
             }
             updateChart();
 
-        }       if (currentInterval) {
+        }       
+                if (currentInterval) {
                     clearInterval(currentInterval);
                     currentInterval = null;
                     console.log('Cleared currentInterval');
-                }
+                } // If there was an interval, clear it
 
                 refreshData(); // Display the dashboard immediately 
 
@@ -76,17 +77,14 @@
 
 				// Current temp
 				var currentTemp = [dataset.current.temp_c];
-				console.log(currentTemp);
                 document.getElementById("currentTempDsp").innerHTML = currentTemp + "°";
                 
                 // Current state icon
                 var currentIcon = [dataset.current.condition.icon];
-                console.log(currentIcon);
                 document.getElementById("iconDsp").src = "http://" + currentIcon;
 
                 // Current state text
                 var currentText = [dataset.current.condition.text];
-                console.log(currentText[0]);
                 document.getElementById("currentStateDsp").innerHTML = currentText;
 
                 // Current humidity
@@ -101,7 +99,6 @@
 
                 // Current city
                 var currentCity = [dataset.location.name];
-                console.log(currentCity);
                 document.getElementById("currentCityDsp").innerHTML = currentCity + ", ";
 
                 // Local current time
@@ -110,19 +107,15 @@
                 var localTime = localDateTime.toString().slice(10,16);
                 document.getElementById("currentDateDsp").innerHTML = localDate;
                 document.getElementById("currentTimeDsp").innerHTML = localTime;
-                console.log(localDate);
 
                 // Convent local time to number              
                 var localTimeSplit = localTime.split(":");
-                console.log(localTimeSplit);
                 var localTimeHour = localTimeSplit[0];
                 var localTimeInt = parseFloat(localTimeHour);
-                console.log(localTimeInt);
                 
                 // Local sundown
                 var sundown = [dataset.forecast.forecastday[0].astro.sunset.toString()];
                 var sundownSplit = sundown.toString().split(":");
-                console.log(sundownSplit);
                 var sundownHour = sundownSplit[0];
                 var sundownInt = parseFloat(sundownHour);
 
@@ -131,33 +124,25 @@
                 if (sundownMinutes == true){
                     var sundownInt = sundownInt + 12;
                 }
-                console.log(sundownInt);
 
 
                 // Local sunrise
                 var sunrise = [dataset.forecast.forecastday[0].astro.sunrise.toString()];
                 var sunriseSplit = sunrise.toString().split(":");
-                console.log(sunriseSplit);
                 var sunriseHour = sunriseSplit[0];
                 var sunriseInt = parseFloat(sunriseHour);
-                console.log(sunriseInt);
                 
                 // Current country
                 var currentCity = [dataset.location.country];
-                console.log(currentCity);
                 document.getElementById("currentCountryDsp").innerHTML = currentCity;
 
 				// Next 24 hour temperatures []
 				let hourTemp = dataset.forecast.forecastday[0].hour.map(dataset => dataset.temp_c);
-				console.log(hourTemp);
 
 				// Next 24 hour date and time []
 				let hourDateTime = dataset.forecast.forecastday[0].hour.map(dataset => dataset.time.toString().slice(11, 16));
-				console.log(hourDateTime);
-
                 // Max temps for the next 3 days []
 				var temp3days = [dataset.forecast.forecastday[0].day.maxtemp_c, dataset.forecast.forecastday[1].day.maxtemp_c, dataset.forecast.forecastday[2].day.maxtemp_c];
-				console.log(temp3days);
 
 
 
@@ -177,33 +162,45 @@
                     var cloud = "transparent";
                     var rain = "transparent";
                     var snow = "transparent";
+                    var blurPx = "blur(0)";
 
-                    // Based on the weather state...
+                    // If the current state of the weather includes the word...
 
-                    if(currentText.toString().includes('rain') == true) {
+                    if(currentText.toString().includes('rain') || currentText.toString().includes('drizzle')) {
                         var background = "#9cb6ca"; // Change background colour
                         var circle = "transparent"; // Hide the sun / moon
                         var cloud = "#EAEAEA"; // Show the cloud
                         var rain = "#ddd"; // Show the rain
                     }
-                    else if(currentText.toString().includes('Overcast') || currentText.toString().includes('cloud')) { // If the current state contains "Overcast" or "cloud"...
+                    else if(currentText.toString().includes('Overcast') || currentText.toString().includes('cloud') || currentText.toString().includes('Cloudy')) {
                         var background = "#aac7e8"; // Change background colour
                         var circle = "transparent"; // Hide the sun / moon
                         var cloud = "#EAEAEA"; // Show the cloud
                     }
-                    else if(currentText.toString().includes('snow') || currentText.toString().includes('Snow') || currentText.toString().includes('sleet')) { // If the current state contains "Overcast" or "cloud"...
+                    else if(currentText.toString().includes('snow') || currentText.toString().includes('Snow') || currentText.toString().includes('sleet')) {
                         var background = "#9cb6ca"; // Change the background
                         var circle = "transparent"; // Hide the sun / moon
                         var cloud = "#EAEAEA"; // Show the cloud
                         var snow = "#ddd"; // Show the snow
                     }
+                    else if(currentText.toString().includes('Mist')) {
+                        var circle = "transparent"; // Hide the sun / moon
+                        var background = "#aac7e8"; // Change the background
+                        var blurPx = "blur(2.5px)"; // Blur the canvas
+                    }
+                    else if(currentText.toString().includes('fog') || currentText.toString().includes('Fog') ) {
+                        var circle = "transparent"; // Hide the sun / moon
+                        var background = "#aac7e8"; // Change the background
+                        var blurPx = "blur(4px)"; // Blur the canvas
+                    }
                     else {
                         var background = "#5c9ce5";
+                        var blurPx = "blur(0)";
                     }
 
                 }
                 else {
-                    // It's night time
+                    // If the current state of the weather includes the word...
                     var shader = "#12192e";
                     var wall = "#65667c";
                     var windowsDark = "#3c465e";
@@ -214,54 +211,44 @@
                     var cloud = "transparent";
                     var rain = "transparent";
                     var snow = "transparent";
+                    var blurPx = "blur(0)";
 
-                    // Based on the weather state...
+                    // If the current state of the weather includes the word...
 
-                    if(currentText.toString().includes('rain') == true) { // If the current state contains "rain"...
+                    if(currentText.toString().includes('rain') || currentText.toString().includes('drizzle')) {
                         var circle = "transparent"; // Hide the sun / moon
                         var cloud = "#374E81"; // Show the cloud
                         var rain = "#ccc"; // Show the rain
                     }
-                    else if(currentText.toString().includes('Overcast') || currentText.toString().includes('cloud')) { // If the current state contains "Overcast" or "cloud"...
+                    else if(currentText.toString().includes('Overcast') || currentText.toString().includes('cloud') || currentText.toString().includes('Cloudy')) {
                         var circle = "transparent"; // Hide the sun / moon
                         var cloud = "#374E81"; // Show the cloud
                     }
-                    else if(currentText.toString().includes('snow') || currentText.toString().includes('Snow') || currentText.toString().includes('sleet')) { // If the current state contains "Overcast" or "cloud"...
+                    else if(currentText.toString().includes('snow') || currentText.toString().includes('Snow') || currentText.toString().includes('sleet')) {
                         var circle = "transparent"; // Hide the sun
                         var cloud = "#EAEAEA"; // Show the cloud
                         var snow = "#ccc"; // Show the snow
                     }
+                    else if(currentText.toString().includes('Mist')) {
+                        var circle = "transparent"; // Hide the sun / moon
+                        var blurPx = "blur(2.5px)"; // Blur the canvas
+                    }
+                    else if(currentText.toString().includes('fog') || currentText.toString().includes('Fog') ) {
+                        var circle = "transparent"; // Hide the sun / moon
+                        var blurPx = "blur(4px)"; // Blur the canvas
+                    }
                     else {
                         var background = "#1b2846";
+                        var blurPx = "blur(0)";
                     }
                 }
 
                 function canvases() {
-
-                    
-                    
+                   
                     // Fill background canvas
                     ctx.fillStyle = background;
                     ctx.fillRect(0, 0, 1280, 700);
-
-                    // Display current temperature, icon and text
-                    /*
-                    ctx.font = "80px Century Gothic";
-                    ctx.fillStyle = white;
-                    ctx.fillText(currentTemp + "°",135,140);
-                    ctx.font = "15px Century Gothic";
-                    ctx.fillText(currentText,145,181);
-                    var img = new Image();
-                    img.src = "http://" + currentIcon;
-                    img.onload = function() {
-                    ctx.drawImage(img, 100, 155, 40, 40);
-                    }; */
-                    
-                    // cloud = new Image();
-                    // cloud.src = 'img/cloud.png';
-                    // cloud.onload = function(){
-                    // ctx.drawImage(cloud, 140, 410, 200, 200);
-                    // }
+                    ctx.filter = blurPx; // Blur the canvas (using this when it's misty or foggy)
 
                     function makeRect(x, y, z, a, fill) { // => We will be adding our custom values here later
                         ctx.beginPath(); // Start drawing
@@ -311,8 +298,6 @@
                     makeArc(200, 560, 4, 0,  2 * m, snow);  
                     makeArc(210, 540, 4, 0,  2 * m, snow);  
 
-
-
                     // Buildings              
                     makeRect(0, 270, 70, 500, wall); // Block
                     
@@ -333,7 +318,7 @@
                         yCoordinate  = yCoordinate  + 20;
                         }
                     
-                        // Arch traditional way - not enough args
+                        // Arch traditional way - not enough args in makeArc()
                         ctx.beginPath(); // Start drawing
                         ctx.arc(12, 270, 50, 1 * m, false); // Make circle with unset values
                         ctx.fillStyle = shader;
@@ -375,14 +360,14 @@
                     
 
                     // Change the colour of the icons based on the weather state / time of the day
-                    var icons = document.getElementsByClassName('icon');
+                    var icons = document.getElementsByClassName('icon'); // Get all the icons
                     for (var i = 0; i < icons.length; i++) {
                         icons[i].style.color = background;
                         icons[i].style.border = "2px solid" + background;
                     }
                 }
 
-                    function humidityChart(){
+                    function charts(){
     
                         var ctx = document.getElementById('humidityChart').getContext('2d');
                         var humidityChart = new Chart(ctx,
@@ -474,7 +459,7 @@
 
                     }
 
-                    humidityChart();
+                    charts();
                     canvases();
                     }
 
