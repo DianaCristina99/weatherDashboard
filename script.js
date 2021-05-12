@@ -20,7 +20,16 @@
                         formatResponse(dataset); // Use this function to get stuff from the dataset
                     })
                     // Catch error - for example, the user doesn't input a valid city / postcode / country
-                    .catch(error => console.log("not ok")); // TO BE IMPROVED
+                    .catch(error => {
+                        // Display the overlay after submit and inform the user there was an error
+                        document.getElementById("labelCity").innerHTML = "Sorry, no location found";
+                        document.getElementById("labelCity").style.display = "block";
+                        document.getElementById("overlay").style.display = "block";
+                        document.getElementById("getCity").classList.remove("after");
+                        document.getElementById("inputCity").classList.remove("inpAfter");
+                        document.getElementById("submitCity").classList.remove("sbmAfter");
+                        document.getElementById("getCity").classList.add("search");
+                    });
                 })
 
             if (inputVal == "") { // If the user doesn't type anything...
